@@ -5,14 +5,14 @@ import {
   View,
   Text,
   TouchableWithoutFeedback,
+  TouchableNativeFeedback,
   TouchableOpacity,
   TouchableHighlight,
   Modal,
   ActivityIndicator,
   FlatList,
   Platform,
-  TextInput,
-  I18nManager
+  TextInput
 } from 'react-native';
 import PropTypes from 'prop-types';
 
@@ -328,6 +328,7 @@ export default class ModalDropdown extends Component {
     const showInBottom =
       bottomSpace >= dropdownHeight || bottomSpace >= this._buttonFrame.y;
     const showInLeft = rightSpace >= this._buttonFrame.x;
+    console.log(showInLeft)
     const positionStyle = {
       height: dropdownHeight,
       top: showInBottom
@@ -348,10 +349,16 @@ export default class ModalDropdown extends Component {
       if (dropdownWidth !== -1) {
         positionStyle.width = dropdownWidth;
       }
-
+   
       positionStyle.right = rightSpace - this._buttonFrame.w;
     }
 
+
+    /**
+     * This position style is likely whats left to be reworked
+     * The addition of left 10 allows for a more centerd drop down
+     */
+    positionStyle.left = 10
     return adjustFrame ? adjustFrame(positionStyle) : positionStyle;
   }
 
@@ -442,7 +449,7 @@ export default class ModalDropdown extends Component {
         automaticallyAdjustContentInsets={false}
         showsVerticalScrollIndicator={showsVerticalScrollIndicator}
         keyboardShouldPersistTaps={keyboardShouldPersistTaps}
-        ListHeaderComponent={ dropdownListProps.ListHeaderComponent? dropdownListProps.ListHeaderComponent: this._renderSearchInput}
+        ListHeaderComponent={this._renderSearchInput}
         onScrollToIndexFailed={info => {
           const wait = new Promise(resolve => setTimeout(resolve, 500));
           wait.then(() => {
@@ -541,11 +548,10 @@ const styles = StyleSheet.create({
   },
   modal: {
     flexGrow: 1,
-    flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row'
   },
   dropdown: {
     position: 'absolute',
-    height: (33 + StyleSheet.hairlineWidth) * 5,
+    //height: (33 + StyleSheet.hairlineWidth) * 5,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: 'lightgray',
     borderRadius: 2,
@@ -556,7 +562,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   list: {
-    // flexGrow: 1,
+    width:'100%',
+    //borderRadius: 2,
+    //flexGrow: 1,
+    //right: 10
   },
   rowText: {
     paddingHorizontal: 6,
